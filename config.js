@@ -62,6 +62,7 @@ function magic_master_filter()
 {
 	let url = window.location.href;
 	let blocks = url.split(/[?]/)
+	globalAccountSettings.push({href: 'https://cal.ufr-info-p6.jussieu.fr:443/caldav.php/MasterInfo/', hrefLabel: 'Informatique (Master)', forceReadOnly: true, settingsAccount: true, checkContentType: true, userAuth: {userName: 'student.master', userPassword: 'guest'}, timeOut: 90000, lockTimeOut: 10000, delegation: false, ignoreAlarms: true, backgroundCalendars: []});
 	let possibilities = [
 		{href: 'https://cal.ufr-info-p6.jussieu.fr:443/caldav.php/ANDROIDE/', hrefLabel: 'Master ANDROIDE', forceReadOnly: true, settingsAccount: false, checkContentType: true, userAuth: {userName: 'student.master', userPassword: 'guest'}, timeOut: 90000, lockTimeOut: 10000, delegation: false, ignoreAlarms: true, backgroundCalendars: []},
 		{href: 'https://cal.ufr-info-p6.jussieu.fr:443/caldav.php/BIM/', hrefLabel: 'Master BIM', forceReadOnly: true, settingsAccount: false, checkContentType: true, userAuth: {userName: 'student.master', userPassword: 'guest'}, timeOut: 90000, lockTimeOut: 10000, delegation: false, ignoreAlarms: true, backgroundCalendars: []},
@@ -75,7 +76,12 @@ function magic_master_filter()
 	]
 	//Le premier bloc est l'url, donc on s'en fiche
 	blocks.shift()
-	globalAccountSettings.push({href: 'https://cal.ufr-info-p6.jussieu.fr:443/caldav.php/MasterInfo/', hrefLabel: 'Informatique (Master)', forceReadOnly: true, settingsAccount: true, checkContentType: true, userAuth: {userName: 'student.master', userPassword: 'guest'}, timeOut: 90000, lockTimeOut: 10000, delegation: false, ignoreAlarms: true, backgroundCalendars: []});
+	if(blocks.length == 0){
+		//Ah bah y'a pas d'option, bah on affiche tout alors
+		globalAccountSettings = globalAccountSettings.concat(possibilities)
+		
+		return false;
+	}
 	blocks.forEach(function(e){
 		let sb = e.split(/[!]/)
 		let n = sb[0].toUpperCase(); //Nom de la spécialité
@@ -335,7 +341,11 @@ var globalAppleRemindersMode=true;
 //var globalSubscribedCalendars={hrefLabel: 'Subscribed', calendars: [{displayName: 'Subscribed Calendar', href: 'http://something.com/calendar.ics', userAuth: {userName: '', userPassword: ''}, ignoreAlarm: true, color: '#ff0000', typeList: ['vevent','vtodo']}]};
 
 function magic_master_selector(){
-	
+	if(names_to_click.length == 0)
+	{
+		//On ne change rien
+		return false;
+	}
 	let chkboxes = $("#ResourceCalDAVList > div > input[type='checkbox']")
 	for(var i=0; i<chkboxes.length; i++){
 		if(names_to_click.some(function(e){
